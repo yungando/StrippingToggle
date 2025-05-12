@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "yungando.strippingtoggle.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "AxeItemMixin",
+    "ShovelItemMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

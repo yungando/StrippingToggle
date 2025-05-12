@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "strippingtoggle",
+  "version": "${version}",
+  "name": "StrippingToggle",
+  "description": "Provides a toggle for log stripping and path creation.",
+  "authors": [
+    "yungando"
+  ],
+  "contact": {
+    "homepage": "http://ando.ws",
+    "sources": "https://github.com/yungando/strippingtoggle"
+  },
+  "license": "CC0-1.0",
+  "icon": "assets/strippingtoggle/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "yungando.strippingtoggle.StrippingToggle"
+    ]
+  },
+  "mixins": [
+    "strippingtoggle.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.16.14",
+    "minecraft": "~1.21.1",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}
