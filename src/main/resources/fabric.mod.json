@@ -3,13 +3,14 @@
   "id": "strippingtoggle",
   "version": "${version}",
   "name": "StrippingToggle",
-  "description": "Provides a toggle for log stripping and path creation.",
+  "description": "Provides a toggle for axe stripping and path creation.",
   "authors": [
     "yungando"
   ],
   "contact": {
-    "homepage": "http://ando.ws",
-    "sources": "https://github.com/yungando/strippingtoggle"
+    "homepage": "https://github.com/yungando/strippingtoggle",
+    "sources": "https://github.com/yungando/strippingtoggle",
+    "issues": "https://github.com/yungando/strippingtoggle/issues"
   },
   "license": "CC0-1.0",
   "icon": "assets/strippingtoggle/icon.png",

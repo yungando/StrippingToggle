@@ -8,6 +8,7 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
+import org.lwjgl.glfw.GLFW;
 
 @Environment(EnvType.CLIENT)
 public class StrippingToggle implements ClientModInitializer {
@@ -17,7 +18,7 @@ public class StrippingToggle implements ClientModInitializer {
   @Override
   public void onInitializeClient() {
     toggleStripping = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-        "key.strippingtoggle.toggleStripping", -1, "category.strippingtoggle"));
+      "key.strippingtoggle.toggleStripping", GLFW.GLFW_KEY_B, "category.strippingtoggle"));
 
     ClientTickEvents.END_CLIENT_TICK.register(client -> {
       if (toggleStripping.wasPressed())
