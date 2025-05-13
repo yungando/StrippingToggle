@@ -1,4 +1,5 @@
-# StrippingToggle
+<p align="center"><img src="https://github.com/yungando/StrippingToggle/blob/main/src/main/resources/assets/strippingtoggle/icon.png" width="128" height="128"></p>
+<h3 align="center">StrippingToggle</h3>
 
 ## Features
 
