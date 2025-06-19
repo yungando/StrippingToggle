@@ -1,18 +1,17 @@
 package yungando.strippingtoggle;
 
 import com.google.common.collect.BiMap;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.fabricmc.fabric.api.client.rendering.v1.HudLayerRegistrationCallback;
-import net.fabricmc.fabric.api.client.rendering.v1.IdentifiedLayer;
+import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.block.*;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.item.HoneycombItem;
 import net.minecraft.util.Identifier;
@@ -32,8 +31,8 @@ public class StrippingToggle implements ClientModInitializer {
 		Blocks.OAK_LOG,
 		Blocks.DARK_OAK_WOOD,
 		Blocks.DARK_OAK_LOG,
-		Blocks.PALE_OAK_WOOD,
-		Blocks.PALE_OAK_LOG,
+//		Blocks.PALE_OAK_WOOD,
+//		Blocks.PALE_OAK_LOG,
 		Blocks.ACACIA_WOOD,
 		Blocks.ACACIA_LOG,
 		Blocks.CHERRY_WOOD,
@@ -65,16 +64,14 @@ public class StrippingToggle implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		toggleStripping = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-				"key.strippingtoggle.toggleStripping", GLFW.GLFW_KEY_B, "category.strippingtoggle"));
+			"key.strippingtoggle.toggleStripping", GLFW.GLFW_KEY_B, "category.strippingtoggle"));
 
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
 			if (toggleStripping.wasPressed())
 				StrippingToggle.toggleStripping();
 		});
 
-		HudLayerRegistrationCallback.EVENT.register(layeredDrawer -> {
-			layeredDrawer.attachLayerAfter(IdentifiedLayer.MISC_OVERLAYS, STRIP_TEXTURE, this::renderTexture);
-		});
+		HudRenderCallback.EVENT.register((this::renderTexture));
 	}
 
 	public static void toggleStripping() {
@@ -98,13 +95,12 @@ public class StrippingToggle implements ClientModInitializer {
 		int x = (screenWidth / 2) - (textureWidth / 2);
 		int y = (screenHeight / 2) - (textureHeight / 2) - 15;
 
-		drawContext.drawTexture(
-				texture -> RenderLayer.getGuiTextured(STRIP_TEXTURE),
-				STRIP_TEXTURE,
-				x, y,
-				0.0f, 0.0f,
-				textureWidth, textureHeight,
-				textureWidth, textureHeight);
+		RenderSystem.enableBlend();
+		RenderSystem.defaultBlendFunc();
+
+		drawContext.drawTexture(STRIP_TEXTURE, x, y,0.0f, 0.0f, textureWidth, textureHeight, textureWidth, textureHeight);
+
+		RenderSystem.disableBlend();
 	}
 
 	public static boolean canBeAxeStripped(Block block) {
@@ -122,6 +118,6 @@ public class StrippingToggle implements ClientModInitializer {
 	}
 
 	public static boolean canBeShovelPathed(Block block) {
-    return SHOVEL_BLOCKS.contains(block);
-  }
+		return SHOVEL_BLOCKS.contains(block);
+	}
 }
