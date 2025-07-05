@@ -24,11 +24,11 @@ public class ClientPlayerInteractionManagerMixin {
       Block interactionBlock = player.getWorld().getBlockState(hitResult.getBlockPos()).getBlock();
 
       if (heldItem instanceof AxeItem && StrippingToggle.canBeAxeStripped(interactionBlock)) {
-        cir.setReturnValue(ActionResult.FAIL);
+        cir.setReturnValue(ActionResult.PASS);
       }
 
       if (heldItem instanceof ShovelItem && StrippingToggle.canBeShovelPathed(interactionBlock)) {
-        cir.setReturnValue(ActionResult.FAIL);
+        cir.setReturnValue(ActionResult.PASS);
       }
     }
   }
