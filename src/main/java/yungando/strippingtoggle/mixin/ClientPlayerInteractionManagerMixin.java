@@ -1,5 +1,7 @@
 package yungando.strippingtoggle.mixin;
 
+import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.minecraft.block.Block;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
@@ -24,11 +26,11 @@ public class ClientPlayerInteractionManagerMixin {
       Block interactionBlock = player.getWorld().getBlockState(hitResult.getBlockPos()).getBlock();
 
       if (heldItem instanceof AxeItem && StrippingToggle.canBeAxeStripped(interactionBlock)) {
-        cir.setReturnValue(ActionResult.FAIL);
+        cir.setReturnValue(ActionResult.PASS);
       }
 
       if (heldItem instanceof ShovelItem && StrippingToggle.canBeShovelPathed(interactionBlock)) {
-        cir.setReturnValue(ActionResult.FAIL);
+        cir.setReturnValue(ActionResult.PASS);
       }
     }
   }
