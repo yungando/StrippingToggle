@@ -64,8 +64,9 @@ public class StrippingToggle implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
+		final KeyBinding.Category StrippingToggleKeyCategory = KeyBinding.Category.create(Identifier.of("yungando","strippingtoggle"));
 		toggleStripping = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-			"key.strippingtoggle.toggleStripping", GLFW.GLFW_KEY_B, "category.strippingtoggle"));
+			"key.yungando.strippingtoggle.toggleStripping", GLFW.GLFW_KEY_B, StrippingToggleKeyCategory));
 
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
 			if (toggleStripping.wasPressed())
@@ -108,16 +109,17 @@ public class StrippingToggle implements ClientModInitializer {
 	public static boolean canBeAxeStripped(Block block) {
 		if (AXE_BLOCKS.contains(block)) return true;
 
+		if (block instanceof CopperGolemStatueBlock) return true;
+
 		BlockState blockState = block.getDefaultState();
 		Optional<BlockState> blockOxidisable = Oxidizable.getDecreasedOxidationState(blockState);
 		if (blockOxidisable.isPresent()) return true;
 
-		Optional<BlockState> optional3 = Optional.ofNullable((Block)((BiMap) HoneycombItem.WAXED_TO_UNWAXED_BLOCKS.get()).get(block))
+		Optional<BlockState> optional3 = Optional.ofNullable((Block)((BiMap<?, ?>) HoneycombItem.WAXED_TO_UNWAXED_BLOCKS.get()).get(block))
 			.map(b -> b.getStateWithProperties(blockState));
-		if (optional3.isPresent()) return true;
 
-		return false;
-	}
+    return optional3.isPresent();
+  }
 
 	public static boolean canBeShovelPathed(Block block) {
 		return SHOVEL_BLOCKS.contains(block);
