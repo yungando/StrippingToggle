@@ -5,27 +5,31 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
-import net.minecraft.block.*;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.RenderPipelines;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.render.RenderTickCounter;
-import net.minecraft.item.HoneycombItem;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.DeltaTracker;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.HoneycombItem;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.CopperGolemStatueBlock;
+import net.minecraft.world.level.block.WeatheringCopper;
+import net.minecraft.world.level.block.state.BlockState;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.*;
 
 @Environment(EnvType.CLIENT)
 public class StrippingToggle implements ClientModInitializer {
-	public static KeyBinding toggleStripping;
+	public static KeyMapping toggleStripping;
 	public static boolean strippingEnabled = false;
 
-	private static final Identifier STRIP_TEXTURE = Identifier.of("strippingtoggle", "textures/gui/strip.png");
+	private static final Identifier STRIP_TEXTURE = Identifier.fromNamespaceAndPath("strippingtoggle", "textures/gui/strip.png");
 
 	protected static final List<Block> AXE_BLOCKS = Arrays.asList(
 		Blocks.OAK_WOOD,
@@ -64,12 +68,12 @@ public class StrippingToggle implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
-		final KeyBinding.Category StrippingToggleKeyCategory = KeyBinding.Category.create(Identifier.of("yungando","strippingtoggle"));
-		toggleStripping = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+		final KeyMapping.Category StrippingToggleKeyCategory = KeyMapping.Category.register(Identifier.fromNamespaceAndPath("yungando","strippingtoggle"));
+		toggleStripping = KeyMappingHelper.registerKeyMapping(new KeyMapping(
 			"key.yungando.strippingtoggle.toggleStripping", GLFW.GLFW_KEY_B, StrippingToggleKeyCategory));
 
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
-			if (toggleStripping.wasPressed())
+			if (toggleStripping.consumeClick())
 				StrippingToggle.toggleStripping();
 		});
 
@@ -80,24 +84,24 @@ public class StrippingToggle implements ClientModInitializer {
 		strippingEnabled = !strippingEnabled;
 	}
 
-	public void renderTexture(DrawContext drawContext, RenderTickCounter tickCounter) {
+	public void renderTexture(GuiGraphicsExtractor drawContext, DeltaTracker tickCounter) {
 		if (!strippingEnabled)
 			return;
 
-		MinecraftClient client = MinecraftClient.getInstance();
+		Minecraft client = Minecraft.getInstance();
 
-		if (client.options.hudHidden)
+		if (client.options.hideGui)
 			return;
 
 		int textureWidth = 32;
 		int textureHeight = 16;
-		int screenWidth = client.getWindow().getScaledWidth();
-		int screenHeight = client.getWindow().getScaledHeight();
+		int screenWidth = client.getWindow().getGuiScaledWidth();
+		int screenHeight = client.getWindow().getGuiScaledHeight();
 
 		int x = (screenWidth / 2) - (textureWidth / 2);
 		int y = (screenHeight / 2) - (textureHeight / 2) - 15;
 
-		drawContext.drawTexture(
+		drawContext.blit(
 			RenderPipelines.GUI_TEXTURED,
 			STRIP_TEXTURE,
 			x, y,
@@ -111,12 +115,12 @@ public class StrippingToggle implements ClientModInitializer {
 
 		if (block instanceof CopperGolemStatueBlock) return true;
 
-		BlockState blockState = block.getDefaultState();
-		Optional<BlockState> blockOxidisable = Oxidizable.getDecreasedOxidationState(blockState);
+		BlockState blockState = block.defaultBlockState();
+		Optional<BlockState> blockOxidisable = WeatheringCopper.getPrevious(blockState);
 		if (blockOxidisable.isPresent()) return true;
 
-		Optional<BlockState> optional3 = Optional.ofNullable((Block)((BiMap<?, ?>) HoneycombItem.WAXED_TO_UNWAXED_BLOCKS.get()).get(block))
-			.map(b -> b.getStateWithProperties(blockState));
+		Optional<BlockState> optional3 = Optional.ofNullable((Block)((BiMap<?, ?>) HoneycombItem.WAX_OFF_BY_BLOCK.get()).get(block))
+			.map(b -> b.withPropertiesOf(blockState));
 
     return optional3.isPresent();
   }

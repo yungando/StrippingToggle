@@ -1,11 +1,11 @@
 {
   "required": true,
   "package": "yungando.strippingtoggle.mixin",
-  "compatibilityLevel": "JAVA_21",
+  "compatibilityLevel": "JAVA_25",
   "injectors": {
     "defaultRequire": 1
   },
   "client": [
-    "ClientPlayerInteractionManagerMixin"
+    "MultiPlayerGameModeMixin"
   ]
 }
