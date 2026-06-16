@@ -72,7 +72,7 @@ public class StrippingToggle implements ClientModInitializer {
 		toggleStripping = KeyMappingHelper.registerKeyMapping(new KeyMapping(
 			"key.yungando.strippingtoggle.toggleStripping", GLFW.GLFW_KEY_B, StrippingToggleKeyCategory));
 
-		ClientTickEvents.END_CLIENT_TICK.register(client -> {
+		ClientTickEvents.END_CLIENT_TICK.register(_ -> {
 			if (toggleStripping.consumeClick())
 				StrippingToggle.toggleStripping();
 		});
@@ -90,7 +90,7 @@ public class StrippingToggle implements ClientModInitializer {
 
 		Minecraft client = Minecraft.getInstance();
 
-		if (client.options.hideGui)
+		if (client.gui.hud.isHidden())
 			return;
 
 		int textureWidth = 32;

@@ -23,10 +23,10 @@ import yungando.strippingtoggle.StrippingToggle;
 @Mixin(MultiPlayerGameMode.class)
 public class MultiPlayerGameModeMixin {
   @Inject(method = "useItemOn", at = @At("HEAD"), cancellable = true)
-  private void StrippingToggle$cancelBlockInteraction(LocalPlayer player, InteractionHand hand, BlockHitResult hitResult, CallbackInfoReturnable<InteractionResult> cir) {
+  private void StrippingToggle$cancelBlockInteraction(LocalPlayer player, InteractionHand hand, BlockHitResult blockHit, CallbackInfoReturnable<InteractionResult> cir) {
     if (!StrippingToggle.strippingEnabled) {
       Item heldItem = player.getItemInHand(hand).getItem();
-      Block interactionBlock = player.level().getBlockState(hitResult.getBlockPos()).getBlock();
+      Block interactionBlock = player.level().getBlockState(blockHit.getBlockPos()).getBlock();
 
       if (heldItem instanceof AxeItem && StrippingToggle.canBeAxeStripped(interactionBlock)) {
         cir.setReturnValue(InteractionResult.PASS);
