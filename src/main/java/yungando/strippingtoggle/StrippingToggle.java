@@ -1,6 +1,7 @@
 package yungando.strippingtoggle;
 
 import com.google.common.collect.BiMap;
+import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -20,7 +21,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CopperGolemStatueBlock;
 import net.minecraft.world.level.block.WeatheringCopper;
 import net.minecraft.world.level.block.state.BlockState;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.*;
 
@@ -54,7 +54,9 @@ public class StrippingToggle implements ClientModInitializer {
 		Blocks.CRIMSON_HYPHAE,
 		Blocks.MANGROVE_WOOD,
 		Blocks.MANGROVE_LOG,
-		Blocks.BAMBOO_BLOCK
+		Blocks.BAMBOO_BLOCK,
+		Blocks.POPLAR_LOG,
+		Blocks.POPLAR_WOOD
 	);
 
 	protected static final List<Block> SHOVEL_BLOCKS = Arrays.asList(
@@ -70,7 +72,7 @@ public class StrippingToggle implements ClientModInitializer {
 	public void onInitializeClient() {
 		final KeyMapping.Category StrippingToggleKeyCategory = KeyMapping.Category.register(Identifier.fromNamespaceAndPath("yungando","strippingtoggle"));
 		toggleStripping = KeyMappingHelper.registerKeyMapping(new KeyMapping(
-			"key.yungando.strippingtoggle.toggleStripping", GLFW.GLFW_KEY_B, StrippingToggleKeyCategory));
+			"key.yungando.strippingtoggle.toggleStripping", InputConstants.KEY_B, StrippingToggleKeyCategory));
 
 		ClientTickEvents.END_CLIENT_TICK.register(_ -> {
 			if (toggleStripping.consumeClick())
