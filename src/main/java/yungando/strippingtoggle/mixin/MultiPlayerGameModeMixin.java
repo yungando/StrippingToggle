@@ -13,6 +13,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.BlockTransformers;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.CopperChestBlock;
 import net.minecraft.world.level.block.WeatheringCopper;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
@@ -40,6 +41,10 @@ public class MultiPlayerGameModeMixin {
     if (!StrippingToggle.strippingEnabled) {
       ItemStack heldItem = player.getItemInHand(hand);
       Block interactionBlock = player.level().getBlockState(blockHit.getBlockPos()).getBlock();
+
+      if (interactionBlock instanceof CopperChestBlock && !player.isSecondaryUseActive()) {
+        return;
+      }
 
       boolean blockStripping = hasTransformer(heldItem, BlockTransformers.AXE) && StrippingToggle.canBeAxeStripped(interactionBlock);
       boolean blockPathing = hasTransformer(heldItem, BlockTransformers.SHOVEL) && StrippingToggle.canBeShovelPathed(interactionBlock);
